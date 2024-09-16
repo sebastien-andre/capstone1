@@ -1,13 +1,76 @@
 @startuml
-title Administrator View - Login, Attendance Check, and Admin Control Panel
+hide footbox
+<style>
+root {
+  LineColor black
+  Shadowing 0
+}
+sequenceDiagram {
+  participant {
+    BackGroundColor white
+    LineThickness 1
+  }
+  group {
+    LineThickness 1
+    LineColor maroon
+    LineStyle 3
+    padding 50
+    margin 50
+  }
+  groupHeader {
+    FontStyle plain
+    BackGroundColor pink
+    LineColor maroon
+    LineStyle 3
+    padding 10
+    margin 10
+  }
+}
+</style>
 
-actor "Administrator" as admin
-boundary "GUI/App" as gui
-control "Webservice" as ws
+title Admin View - Attendance View for Admin
+
+actor "Admin" as a
+boundary "GUI/App (Boundary)" as gui
+control "Webservice (Control)" as ws
 database "Online Database" as db
-database "Local Storage" as ls
 
-admin -> gui: Enter login credentials
-gui -> ls: Check credentials
-gui --> admin: Display login success/failure
+
+a -> gui: Choose view attendance
+activate a 
+activate gui
+gui -> ws: Check connectivity
+activate ws
+ws --> gui: Return connection status
+deactivate ws
+
+
+alt Not Connected
+    gui --> a: Check network connection error, retrying in 5 mins
+    loop every 5 minutes
+        gui -> ws: Check connectivity
+        activate ws
+        ws --> gui: Return connection status
+        deactivate ws
+    end
+
+else Connected to Network
+    gui -> ws: Request up-to-date attendance
+    activate ws
+    ws -> db: Query up-to-date attendance
+    activate db
+    db --> ws: Return up-to-date attendance
+    deactivate db
+    ws --> gui: Return up-to-date attendance
+    deactivate ws
+    gui --> a: Options for displaying filtered, aggregate data
+    a -> gui: Selects option
+    gui -> gui: Performs operation on data
+    gui --> a: Displays data post-operation
+    deactivate gui
+
+   
+end
+
+deactivate a
 @enduml
