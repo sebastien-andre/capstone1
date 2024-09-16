@@ -13,7 +13,7 @@ cd uml-diagramming
 ```
 
 ### Install Dependencies
-First, install the required dependencies using the `requirements.txt` file:
+Using the `requirements.txt` file:
 ```bash
 python -m venv env
 source env/bin/activate
