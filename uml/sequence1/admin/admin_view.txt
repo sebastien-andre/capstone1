@@ -1,0 +1,13 @@
+@startuml
+title Administrator View - Login, Attendance Check, and Admin Control Panel
+
+actor "Administrator" as admin
+boundary "GUI/App" as gui
+control "Webservice" as ws
+database "Online Database" as db
+database "Local Storage" as ls
+
+admin -> gui: Enter login credentials
+gui -> ls: Check credentials
+gui --> admin: Display login success/failure
+@enduml

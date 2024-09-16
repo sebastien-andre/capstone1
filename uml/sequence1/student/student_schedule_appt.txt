@@ -1,0 +1,95 @@
+@startuml
+hide footbox
+<style>
+root {
+  LineColor black
+  Shadowing 0
+}
+sequenceDiagram {
+  participant {
+    BackGroundColor white
+    LineThickness 1
+  }
+  group {
+    LineThickness 1
+    LineColor maroon
+    LineStyle 3
+    padding 50
+    margin 50
+  }
+  groupHeader {
+    FontStyle plain
+    BackGroundColor pink
+    LineColor maroon
+    LineStyle 3
+    padding 10
+    margin 10
+  }
+}
+</style>
+
+title Student View - Reservation
+
+actor "Student" as s
+boundary "GUI/App (Boundary)" as gui
+control "Webservice (Control)" as ws
+database "Online Database" as db
+database "Local Storage" as ls
+
+s -> gui: Select scheduling
+activate s
+activate gui
+gui -> ws: Check internet connectivity
+activate ws
+deactivate ws
+alt Connected to Network
+    gui -> ws: Request up-to-date schedule
+    activate ws
+    ws -> db: Query up-to-date schedule
+    activate db
+    deactivate db
+    ws --> gui: Return up-to-date schedule
+    deactivate ws
+    gui --> s: Display up-to-date schedule
+    s -> gui: Select appointment
+    gui --> s: Ask for confirmation
+    s -> gui: Confirm signup
+    gui -> ws: Request booking
+    activate ws
+    ws -> db: Check for booking
+    activate db
+    deactivate db
+    alt Appointment Available
+        ws --> db: Mark appointment booked
+        activate db
+        deactivate db
+        ws --> gui: Signup success
+        deactivate ws
+        gui -> ls: Mark appointment booked locally
+        activate ls
+        deactivate ls
+        gui --> s: Display signup success
+        deactivate gui
+    else Appointment Booked
+        ws --> gui: Appointment unavailable
+        activate gui
+        activate ws
+        deactivate ws
+        gui --> s: Display appointment unavailable
+        activate s
+        deactivate s
+        deactivate gui
+    end 
+else Not Connected
+    gui --> s: Check network connection error, retrying in 5 mins
+    loop every 5 minutes
+        gui -> ws: Check internet connectivity
+        activate ws
+        deactivate ws
+    end
+    gui -> ls: Get key for validity check and run connected to network alt
+    activate ls
+    deactivate ls
+    deactivate gui
+end
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+title Tutor View - Login, Reservation, and QR Code Generation
+
+actor "Tutor" as t
+boundary "GUI/App" as gui
+control "Webservice" as ws
+database "Online Database" as db
+database "Local Storage" as ls
+
+t -> gui: Enter login credentials
+gui -> ls: Check credentials
+gui --> t: Display login success/failure
+
+' Optional offline block
+opt Offline Scenario
+    gui -> ls: Generate QR code (draw next available code)
+    ls --> gui: Display QR code on screen
+    gui -> ls: Check internet connectivity
+    alt Connected to Internet
+        ls -> ws: Send confirmation of QR code usage
+        ws -> db: Update database (mark code as used)
+        ws --> ls: Confirm code validity
+    else Not Connected
+        ls --> gui: Inform about offline status
+    end
+end
+@enduml

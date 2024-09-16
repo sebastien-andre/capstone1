@@ -1,0 +1,91 @@
+@startuml
+hide footbox
+<style>
+root {
+  LineColor black
+  Shadowing 0
+}
+sequenceDiagram {
+  participant {
+    BackGroundColor white
+    LineThickness 1
+  }
+  group {
+    LineThickness 1
+    LineColor maroon
+    LineStyle 3
+    padding 50
+    margin 50
+  }
+  groupHeader {
+    FontStyle plain
+    BackGroundColor pink
+    LineColor maroon
+    LineStyle 3
+    padding 10
+    margin 10
+  }
+}
+</style>
+
+
+
+title Student View - QR Code Scanning
+
+
+
+actor "Student" as s
+boundary "GUI/App (Boundary)" as gui
+control "Webservice (Control)" as ws
+database "Online Database" as db
+database "Local Storage" as ls
+
+
+
+opt QR Code Scanning
+    s -> gui: Select QR scanner
+    activate s
+    activate gui
+    gui --> s: Enter camera view
+    s -> gui: Scan QR code
+    gui -> ws: Check internet connectivity
+    activate ws
+    deactivate ws
+    alt Connected to Network
+        gui -> ws: Send QR code details to webservice
+        activate ws
+        ws -> db: Validate and mark QR code as used
+        activate db
+        deactivate db
+        alt Invalid Code
+            ws -> gui: Return error
+            gui --> s: Display invalid code/not signed up for session
+        end
+
+        gui -> ws: Request new set of valid codes
+        ws -> db: Request new set of valid codes
+        activate db
+        deactivate db
+        ws --> gui: Return new set of valid codes
+        deactivate ws
+        gui -> ls: Update set of valid codes
+        activate ls
+        deactivate ls
+    else Not Connected
+        gui --> s: Check network connection error, retrying in 5 mins
+        gui -> ls: Store code in local until reconnected
+        activate ls
+        deactivate ls
+        loop every 5 minutes
+            gui -> ws: Check internet connectivity
+            activate ws
+            deactivate ws
+        end
+        gui -> ls: Get key for validity check and run connected to network alt
+        activate ls
+        deactivate ls
+        deactivate s
+        deactivate gui
+    end
+end
+@enduml
