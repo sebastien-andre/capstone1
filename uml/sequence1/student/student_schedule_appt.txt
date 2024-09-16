@@ -36,11 +36,10 @@ control "Webservice (Control)" as ws
 database "Online Database" as db
 database "Local Storage" as ls
 
+
 s -> gui: Select scheduling
 activate s
 activate gui
-gui --> s: Enter camera view
-s -> gui: Scan QR code
 gui -> ws: Check connectivity
 activate ws
 ws --> gui: Return connection status
@@ -76,6 +75,7 @@ else Connected to Network
     activate ws
     ws -> db: Check for booking
     activate db
+    db --> ws: Return booking status
     deactivate db
 
     alt Appointment Unavailable

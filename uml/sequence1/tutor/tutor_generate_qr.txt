@@ -28,7 +28,11 @@ sequenceDiagram {
 }
 </style>
 
-title Tutor View - Set Schedule
+
+
+title Tutor View - QR Code Generation
+
+
 
 actor "Tutor" as t
 boundary "GUI/App (Boundary)" as gui
@@ -37,17 +41,24 @@ database "Online Database" as db
 database "Local Storage" as ls
 
 
-t -> gui: Select scheduling
+t -> gui: Select QR generator
 activate t
 activate gui
+
 gui -> ws: Check connectivity
 activate ws
 ws --> gui: Return connection status
 deactivate ws
 
 alt Not Connected
-    gui --> t: Check network connection error, retrying in 5 mins
-    loop every 5 minutes
+    gui -> ls: Query what codes are able to be used
+    activate ls
+    ls --> gui: Return unused code
+    deactivate ls
+    gui -> gui: Generate scannable code
+    gui --> t: Display connection error, retrying in 5 mins
+    gui --> t: Display scannable code
+    loop Every 5 minutes
         gui -> ws: Check connectivity
         activate ws
         ws --> gui: Return connection status
@@ -59,35 +70,22 @@ alt Not Connected
     deactivate ls
 
 else Connected to Network
-    gui -> ws: Request up-to-date schedule
+    gui -> ws: Send QR code details to webservice
     activate ws
-    ws -> db: Query up-to-date schedule
+    ws -> db: Mark QR code as used and query new valid offline codes
     activate db
-    db --> ws: Return up-to-date schedule
+    db --> ws: Return new valid offline codes
     deactivate db
-    ws --> gui: Return up-to-date schedule
+    ws --> gui: Attendance code verified and send new valid offline codes
     deactivate ws
-    gui --> t: Display up-to-date schedule
-    t -> gui: Select days, times
-    gui --> t: Ask for confirmation
-    t -> gui: Confirm signup
-    gui -> ws: Send schedule
-    activate ws
-    ws -> db: Mark tutor scheduled
-    
-    activate db
-    deactivate db
-    ws --> gui: Schedule successful
-    deactivate ws
-    gui --> ls: Update local schedule
+    gui -> ls: Record new valid offline codes
     activate ls
     deactivate ls
-    gui --> t: Display schedule successful
+    gui --> t: Display attendance code verified
     deactivate gui
 
 
-    
-
 end
 deactivate t
+
 @enduml
