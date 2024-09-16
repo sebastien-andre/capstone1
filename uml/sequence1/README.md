@@ -12,6 +12,7 @@
 ## Tutor
 
 ![Tutor Diagram 1](tutor/png/tutor_schedule_hours.png)
+![Tutor Diagram 2](tutor/png/tutor_generate_qr.png)
 
 ## Admin
 
