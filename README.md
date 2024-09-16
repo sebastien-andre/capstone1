@@ -6,7 +6,7 @@
 
 ## Setup Instructions
 
-### 1. Clone the Repository
+### Clone the Repository
 ```bash
 git clone https://github.com/your-repo/uml-diagramming.git
 cd uml-diagramming
