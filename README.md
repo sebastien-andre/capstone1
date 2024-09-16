@@ -8,8 +8,8 @@
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/your-repo/uml-diagramming.git
-cd uml-diagramming
+git clone https://github.com/sebastien-andre/capstone1.git
+cd capstone1
 ```
 
 ### Install Dependencies
