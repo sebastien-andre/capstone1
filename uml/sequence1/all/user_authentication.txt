@@ -31,7 +31,7 @@ sequenceDiagram {
 
 
 
-title Student View - Login, Reservation, and QR Code Scanning
+title All Client View - Authentication
 
 
 
@@ -43,20 +43,28 @@ database "Local Storage" as ls
 
 
 
-' Appointment scheduling
+alt Default
+  activate s
+  s -> gui: Enter login credentials
+  activate gui
+  gui -> ls: Check credentials
+  activate ls
+  deactivate ls
+  gui --> s: Display login success/failure
+  deactivate gui
+  deactivate s
 
-alt
-    activate s
-    s -> gui: Enter login credentials
-    activate gui
-    gui -> ls: Check credentials
-    activate ls
-    deactivate ls
-    gui --> s: Display login success/failure
-    deactivate gui
-    deactivate s
+else First Time Authentication or Authentication Expired
+  activate s
+  s -> gui: Enter login credentials
+  activate gui
+  gui -> ls: Check credentials
+  activate ls
+  deactivate ls
+  gui --> s: Display login success/failure
+  deactivate gui
+  deactivate s
 
 
 end
 @enduml
-
