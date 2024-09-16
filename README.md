@@ -4,7 +4,7 @@
 # Capstone project
 
 ## Requirements
-- Python 3.7+
+- Python
 - PlantUML
 
 ## Setup Instructions
