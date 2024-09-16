@@ -20,5 +20,4 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-### For generating/viewing uml diagrams, open uml folder
-[Go to UML Folder](uml/)
+[Go to Sequence Diagram Folder](uml/sequence1/)
