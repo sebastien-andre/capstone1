@@ -39,14 +39,32 @@ database "Local Storage" as ls
 s -> gui: Select scheduling
 activate s
 activate gui
-gui -> ws: Check internet connectivity
+gui --> s: Enter camera view
+s -> gui: Scan QR code
+gui -> ws: Check connectivity
 activate ws
+ws --> gui: Return connection status
 deactivate ws
-alt Connected to Network
+
+alt Not Connected
+    gui --> s: Check network connection error, retrying in 5 mins
+    loop every 5 minutes
+        gui -> ws: Check connectivity
+        activate ws
+        ws --> gui: Return connection status
+        deactivate ws
+    end
+    gui -> ls: Get key for validity check
+    activate ls
+    ls --> gui: Return key details
+    deactivate ls
+
+else Connected to Network
     gui -> ws: Request up-to-date schedule
     activate ws
     ws -> db: Query up-to-date schedule
     activate db
+    db --> ws: Return up-to-date schedule
     deactivate db
     ws --> gui: Return up-to-date schedule
     deactivate ws
@@ -59,7 +77,11 @@ alt Connected to Network
     ws -> db: Check for booking
     activate db
     deactivate db
-    alt Appointment Available
+
+    alt Appointment Unavailable
+        ws --> gui: Appointment unavailable
+        gui --> s: Display appointment unavailable
+    else Appointment Available
         ws --> db: Mark appointment booked
         activate db
         deactivate db
@@ -70,26 +92,9 @@ alt Connected to Network
         deactivate ls
         gui --> s: Display signup success
         deactivate gui
-    else Appointment Booked
-        ws --> gui: Appointment unavailable
-        activate gui
-        activate ws
-        deactivate ws
-        gui --> s: Display appointment unavailable
-        activate s
-        deactivate s
-        deactivate gui
+
     end 
-else Not Connected
-    gui --> s: Check network connection error, retrying in 5 mins
-    loop every 5 minutes
-        gui -> ws: Check internet connectivity
-        activate ws
-        deactivate ws
-    end
-    gui -> ls: Get key for validity check and run connected to network alt
-    activate ls
-    deactivate ls
-    deactivate gui
+    deactivate s
+
 end
 @enduml

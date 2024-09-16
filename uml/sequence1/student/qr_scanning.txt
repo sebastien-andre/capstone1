@@ -41,51 +41,50 @@ database "Online Database" as db
 database "Local Storage" as ls
 
 
+s -> gui: Select QR scanner
+activate s
+activate gui
+gui --> s: Enter camera view
+s -> gui: Scan QR code
+gui -> ws: Check connectivity
+activate ws
+ws --> gui: Return connection status
+deactivate ws
 
-opt QR Code Scanning
-    s -> gui: Select QR scanner
-    activate s
-    activate gui
-    gui --> s: Enter camera view
-    s -> gui: Scan QR code
-    gui -> ws: Check internet connectivity
-    activate ws
-    deactivate ws
-    alt Connected to Network
-        gui -> ws: Send QR code details to webservice
+alt Not Connected
+    gui -> ls: Store QR code in local until reconnected
+    activate ls
+    deactivate ls
+    gui --> s: Display connection error, retrying in 5 mins
+    loop Every 5 minutes
+        gui -> ws: Check connectivity
         activate ws
-        ws -> db: Validate and mark QR code as used
-        activate db
-        deactivate db
-        alt Invalid Code
-            ws -> gui: Return error
-            gui --> s: Display invalid code/not signed up for session
-        end
-
-        gui -> ws: Request new set of valid codes
-        ws -> db: Request new set of valid codes
-        activate db
-        deactivate db
-        ws --> gui: Return new set of valid codes
+        ws --> gui: Return connection status
         deactivate ws
-        gui -> ls: Update set of valid codes
-        activate ls
-        deactivate ls
-    else Not Connected
-        gui --> s: Check network connection error, retrying in 5 mins
-        gui -> ls: Store code in local until reconnected
-        activate ls
-        deactivate ls
-        loop every 5 minutes
-            gui -> ws: Check internet connectivity
-            activate ws
-            deactivate ws
-        end
-        gui -> ls: Get key for validity check and run connected to network alt
-        activate ls
-        deactivate ls
-        deactivate s
+    end
+    gui -> ls: Get key for validity check
+    activate ls
+    ls --> gui: Return key details
+    deactivate ls
+
+else Connected to Network
+    gui -> ws: Send QR code details to webservice
+    activate ws
+    ws -> db: Validate and mark QR code as used
+    activate db
+    deactivate db
+    alt Invalid Code
+        ws --> gui: Return invalid code
+        gui --> s: Display invalid code/not signed up for session
+
+    else Valid Code
+        ws --> gui: Return valid code
+        deactivate ws
+        gui --> s: Display attendance recorded message
         deactivate gui
     end
+
 end
+deactivate s
+
 @enduml
