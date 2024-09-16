@@ -33,38 +33,67 @@ sequenceDiagram {
 
 title All Client View - Authentication
 
-
-
 actor "User" as s
 boundary "GUI/App (Boundary)" as gui
 control "Webservice (Control)" as ws
+control "Auth Server (Control)" as auth
 database "Online Database" as db
-database "Local Storage" as ls
 
 
 
-alt Default
-  activate s
-  s -> gui: Enter login credentials
-  activate gui
-  gui -> ls: Check credentials
-  activate ls
-  deactivate ls
-  gui --> s: Display login success/failure
-  deactivate gui
-  deactivate s
+activate s
+s -> gui: Enter login credentials
+activate gui
+gui -> gui: Hash password
+gui -> ws: Send credentials (username, pswd hash)
+activate ws
+ws -> auth: Verify credentials (username, pswd hash)
+activate auth
 
-else First Time Authentication or Authentication Expired
-  activate s
-  s -> gui: Enter login credentials
-  activate gui
-  gui -> ls: Check credentials
-  activate ls
-  deactivate ls
-  gui --> s: Display login success/failure
-  deactivate gui
-  deactivate s
+alt User Not Found
+  auth -> db: Find user(username)
+  activate db
+  db --> auth: Empty
+  deactivate db
+  auth --> ws: User not found 
+  ws --> gui: User not found
+  gui --> s: User not found
 
 
+else User Found
+  
+  auth -> db: Find user(username)
+  activate db
+  db --> auth: User details
+  deactivate db
+  auth -> db: Retrieve stored pswd
+  activate db
+  db --> auth: Stored pswd hash
+  deactivate db
+
+  alt Password Verification Failed
+    auth -> auth: Pswd match (pswd hash, stored pswd hash): False
+    auth --> ws: Invalid password
+    ws --> gui: Invalid password
+    gui --> s: Failed login attempt
+
+  else Password Verification Success
+    
+    auth -> auth: Pswd match (pswd hash, stored pswd hash): True
+    auth --> ws: Valid password
+    deactivate auth
+    ws --> gui: Valid password
+    deactivate ws
+    gui --> s: Log user in, display homepage
+    deactivate s
+    deactivate gui
+  end
 end
+
+
+
+
+
+
+deactivate s
 @enduml
