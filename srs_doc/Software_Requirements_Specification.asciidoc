@@ -1,0 +1,62 @@
+Team #:
+
+Team Name:
+
+Members:
+
+Section:
+
+Indicate the Section of Capstone: <Tuesday> or <Wednesday>
+
+== Table of Contents
+
+link:#introduction-overview[Introduction / Overview link:#introduction-overview[2]]
+
+link:#general-description[General description link:#general-description[2]]
+
+link:#functional-requirements[Functional Requirements link:#functional-requirements[2]]
+
+link:#interface-requirements[Interface Requirements link:#interface-requirements[2]]
+
+link:#performance-requirements[Performance Requirements link:#performance-requirements[2]]
+
+link:#design-constraints[Design Constraints link:#design-constraints[3]]
+
+link:#non-functional-attributes[Non-Functional Attributes link:#non-functional-attributes[3]]
+
+link:#_Toc176788910[Preliminary Schedule and Budget link:#_Toc176788910[3]]
+
+link:#appendices[Appendices link:#appendices[3]]
+
+== Introduction / Overview
+
+* The description of your software product is explained. It is a simple summary or overall purpose and high-level account of what it does.
+
+== General description
+
+* In this, general functions of product which includes objective of user, a user characteristic, features, benefits, about why it’s important is mentioned. It also describes target user community.
+
+== Functional Requirements
+
+* Functional requirements specify the expected behavior of the system-which outputs should be produced from the given inputs. They describe the relationship between the input and output of the system. For each functional requirement, detailed description all the data inputs and their source, the units of measure, and the range of valid inputs must be specified. (minimum 6 FR)
+
+== Interface Requirements
+
+* Software interfaces mean how software components communicate with each other or users either in form of any language, code, or message are describe. Examples can be web services, potential micro frameworks, platform specifics.
+
+== Performance Requirements
+
+* In this, how a software system performs desired functions under certain conditions is explained, I.E., what environment(s) you use the software system
+* Give 3 PR relating to the performance of the proposed software system.
+
+== Design Constraints
+
+* In this, constraints which simply means limitation or restriction are specified and explained for designing the software system. These may be a particular algorithm, hardware and software limitations, etc. The other design constraints are factors describing any standards that must be followed, resource limits, operating environment, reliability, and security requirements and policies.
+
+== Non-Functional Attributes
+
+* Non-functional attributes are explained that are required by software system for better performance. An example may include Security, Portability, Reliability, Reusability, Application compatibility, Data integrity, Scalability capacity, etc.
+
+== Appendices
+
+* In this, additional information like references from where information is gathered, definitions of some specific terms, acronyms, abbreviations, etc. are given and explained.
