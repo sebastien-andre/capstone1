@@ -1,12 +1,10 @@
-Team #:
+Team #: 11
 
 Team Name:
 
-Members:
+Members: Sebastien Lee, Julian Ornelas, Abel Moges, Tyler Powell, Nia Snow
 
-Section:
-
-Indicate the Section of Capstone: <Tuesday> or <Wednesday>
+Section: Tuesday
 
 == Table of Contents
 
