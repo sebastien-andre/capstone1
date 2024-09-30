@@ -1,0 +1,50 @@
+@startuml
+
+scale 2.0 
+
+skinparam linetype ortho
+skinparam entity {
+  Padding 25
+  BorderColor DarkSlateGray
+  BackgroundColor LightGray
+  FontColor DarkSlateGray
+  ArrowColor Black
+  ArrowThickness 2
+  RoundCorner 25
+  Shadowing true
+}
+
+skinparam default {
+  HorizontalSpacing 80
+  VerticalSpacing 80
+}
+
+title Student Online Database
+
+entity "Student" as Student {
+  *student_id : INT <<PK>>
+  --
+  name : VARCHAR
+  email : VARCHAR
+  is_verified : BOOLEAN
+  verification_token : VARCHAR
+}
+
+entity "StoredKey" as StoredKey {
+  *key_id : INT <<PK>>
+  --
+  key_value : VARCHAR
+  received_date : DATETIME
+}
+
+entity "OnlineReservedSessions" as OnlineReservedSessions {
+  *reservation_id : INT <<PK>>
+  --
+  student_id : INT <<FK>>
+  session_time : DATETIME
+}
+
+Student ||--o{ StoredKey
+Student ||--o{ OnlineReservedSessions
+
+@enduml
