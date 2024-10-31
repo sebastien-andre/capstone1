@@ -1,0 +1,53 @@
+@startchen
+left to right direction
+
+caption Student(__panther_id__, fname, lname, email, num_sessions_missed)\nTutor(__tutor_id__, alt_id, fname, lname, email)\nSessions(__tutor_id__, __session_id__, tutor_alt_id, scheduled_student_id, attended_student_id)\nFK tutor_id REFERENCES Tutor.id\nFK tutor_alt_id REFERENCES Tutor.alt_id \nFK scheduled_student_id REFERENCES Student.panther_id\nFK attended_student_id REFERENCES Student.panther_id
+
+
+title Online ER Diagram
+
+entity "Tutor" as TUTOR {
+  id <<key>>
+  alt_id
+  name {
+  fname
+  lname
+  }
+  email
+}
+
+
+entity "Student" as STUDENT {
+  panther_id <<key>>
+  name {
+  fname
+  lname
+  }
+  email
+  num_missed_sessions
+}
+
+
+entity "Sessions" as SESSIONS <<weak>>{
+  session_id <<key>>
+  date_time
+  tutor_id
+  tutor_alt_id
+  scheduled_student_id
+  attended_student_id
+}
+
+
+relationship attends {
+}
+
+relationship leads <<identifying>>{
+}
+
+
+STUDENT -1- attends
+attends -N- SESSIONS
+TUTOR -1- leads
+leads -N- SESSIONS
+
+@endchen

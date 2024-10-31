@@ -1,0 +1,35 @@
+@startchen
+left to right direction
+
+caption Person(__main_key__, alternate_key, scanned_key, fname, lname, email)\nSchedule(__session_id__ tutor_fname, tutor_lname, date_time)
+
+
+title Offline ER Diagram
+
+entity "Person" as PERSON {
+  main_key <<key>>
+  alternate_key
+  scanned_key
+  name {
+  fname
+  lname
+  }
+  email
+}
+
+entity "Schedule" as SCHEDULE {
+  session_id <<key>>
+  tutor_name{
+  fname
+  lname
+  }
+  date_time
+}
+
+relationship has_schedule {
+}
+
+PERSON -1- has_schedule
+has_schedule -N- SCHEDULE
+
+@endchen
