@@ -53,10 +53,7 @@ alt Not Connected
         ws --> gui: Return connection status
         deactivate ws
     end
-    gui -> ls: Get key for validity check
-    activate ls
-    ls --> gui: Return key details
-    deactivate ls
+
 
 else Connected to Network
     gui -> ws: Request up-to-date schedule

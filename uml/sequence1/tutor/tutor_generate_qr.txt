@@ -36,8 +36,6 @@ title Tutor View - QR Code Generation
 
 actor "Tutor" as t
 boundary "GUI/App (Boundary)" as gui
-control "Webservice (Control)" as ws
-database "Online Database" as db
 database "Local Storage" as ls
 
 
@@ -45,47 +43,26 @@ t -> gui: Select QR generator
 activate t
 activate gui
 
-gui -> ws: Check connectivity
-activate ws
-ws --> gui: Return connection status
-deactivate ws
 
-alt Not Connected
-    gui -> ls: Query what codes are able to be used
+alt Different Student Shows Up
+    gui -> ls: Query alternate qr code key
     activate ls
-    ls --> gui: Return unused code
-    deactivate ls
-    gui -> gui: Generate scannable code
-    gui --> t: Display connection error, retrying in 5 mins
-    gui --> t: Display scannable code
-    loop Every 5 minutes
-        gui -> ws: Check connectivity
-        activate ws
-        ws --> gui: Return connection status
-        deactivate ws
-    end
-    gui -> ls: Get key for validity check
-    activate ls
-    ls --> gui: Return key details
+    ls --> gui: Return alternate qr code key
     deactivate ls
 
-else Connected to Network
-    gui -> ws: Send QR code details to webservice
-    activate ws
-    ws -> db: Mark QR code as used and query new valid offline codes
-    activate db
-    db --> ws: Return new valid offline codes
-    deactivate db
-    ws --> gui: Attendance code verified and send new valid offline codes
-    deactivate ws
-    gui -> ls: Record new valid offline codes
+
+else Reservee Student Shows up
+    gui -> ls: Query qr code key
     activate ls
+    ls --> gui: Return qr code key
     deactivate ls
-    gui --> t: Display attendance code verified
-    deactivate gui
+
 
 
 end
+
+gui -> gui: Generate scannable code
+gui --> t: Display scannable code
 deactivate t
 
 @enduml
