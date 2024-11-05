@@ -31,64 +31,59 @@ sequenceDiagram {
 
 
 
-title All Client View - Authentication
+
+title All Client View - Sign-Up with Email Code Verification and Local Storage
 
 actor "User" as s
 boundary "GUI/App (Boundary)" as gui
 control "Webservice (Control)" as ws
-control "Auth Server (Control)" as auth
 database "Online Database" as db
-
+database "Local Database" as local_db
 
 
 activate s
-s -> gui: Enter login credentials
+s -> gui: Enter sign-up details (email, password, name, PantherID)
 activate gui
-gui -> gui: Hash password
-gui -> ws: Send credentials (username, pswd hash)
+gui -> ws: Send sign-up details (email, password hash, name, PantherID)
 activate ws
-ws -> auth: Verify credentials (username, pswd hash)
-activate auth
-
-alt User Not Found
-  auth -> db: Find user(username)
-  activate db
-  db --> auth: Empty
-  deactivate db
-  auth --> ws: User not found 
-  ws --> gui: User not found
-  gui --> s: User not found
+ws -> ws: Generate unique verification code
+ws -> db: Create user record 
+activate db
+deactivate db
 
 
-else User Found
-  
-  auth -> db: Find user(username)
-  activate db
-  db --> auth: User details
-  deactivate db
-  auth -> db: Retrieve stored pswd
-  activate db
-  db --> auth: Stored pswd hash
-  deactivate db
+ws --> gui: Confirmation of sign-up, prompt to check email for code
+deactivate ws
+gui --> s: Prompt to check email for code entry
+deactivate gui
 
-  alt Password Verification Failed
-    auth -> auth: Pswd match (pswd hash, stored pswd hash): False
-    auth --> ws: Invalid password
-    ws --> gui: Invalid password
-    gui --> s: Failed login attempt
 
-  else Password Verification Success
-    
-    auth -> auth: Pswd match (pswd hash, stored pswd hash): True
-    auth --> ws: Valid password
-    deactivate auth
-    ws --> gui: Valid password
+s -> gui: Enter verification code from email
+activate gui
+gui -> ws: Submit code for verification
+activate ws
+
+ws -> db: Check if code matches stored verification code
+activate db
+alt Code Invalid
+    db --> ws: Code does not match
+    ws --> gui: Display "Invalid code, please try again"
+    gui --> s: Prompt to re-enter code
+
+else Code Valid
+    db --> ws: Code matches, retrieve user information
+    deactivate db
+    ws --> gui: Verification successful, send user info to app for local storage
     deactivate ws
-    gui --> s: Log user in, display homepage
-    deactivate s
-    deactivate gui
-  end
+    gui -> local_db: Store user information locally
+    activate local_db
+    deactivate local_db
+    gui --> s: Display "Email Verified Successfully!"
 end
+deactivate gui
+deactivate s
+
+
 
 
 
