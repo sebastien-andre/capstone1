@@ -1,0 +1,30 @@
+@startuml
+left to right direction
+
+actor "Tutor" as tutor
+actor "Student" as student
+actor "Admin" as admin
+
+rectangle "Session Management" {
+  usecase "Generate QR Code" as UC1
+  usecase "Create Session" as UC2
+  usecase "Scan QR Code" as UC3
+  usecase "Sign Up for a Session" as UC4
+  usecase "Receive Push Notifications" as UC5
+  usecase "Email Verification" as UC6
+  usecase "Generate Attendance List" as UC7
+}
+
+tutor --> UC1
+tutor --> UC2
+tutor --> UC5
+tutor --> UC6
+
+student --> UC3
+student --> UC4
+student --> UC5
+student --> UC6
+
+admin --> UC7
+
+@enduml
