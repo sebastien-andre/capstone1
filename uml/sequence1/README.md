@@ -28,9 +28,3 @@
 ![Tutor Diagram 2](tutor/png/tutor_generate_qr.png)
 *Figure 5: Tutor Generate QR Code Diagram*
 \newpage
-
-
-## Admin
-
-![Admin Diagram 1](admin/png/admin_view.png)
-*Figure 6: Admin Dashboard View Diagram*
